@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segmentare Automata — PromptCNN + SAM3</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="/static/style.css?v=20" />
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>Segmentare Automata a Masinilor</h1>
+      <p class="header-sub">PromptCNN + SAM3 &nbsp;|&nbsp; Imagini aeriene UAV</p>
+    </div>
+    <span class="header-badge">Licenta 2026</span>
+  </header>
+
+  <div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+
+      <section class="sb-section">
+        <p class="sb-label">Selecteaza imagine</p>
+        <div class="image-list-wrap">
+          <input id="searchInput" class="search-input" type="text" placeholder="Filtreaza..." />
+          <div id="imageList" class="image-list">
+            <p class="list-empty">Se incarca lista...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sb-section actions-section">
+        <button id="btnProcess" class="btn btn-primary" disabled>
+          &#9654;&nbsp; Segmenteaza toate
+        </button>
+        <div class="btn-row">
+          <button id="btnReset" class="btn btn-secondary" disabled>&#8635; Reset</button>
+          <button id="btnSave"  class="btn btn-secondary" disabled>&#8595; Salveaza</button>
+        </div>
+        <label class="debug-toggle">
+          <input type="checkbox" id="chkDebug" />
+          <span>Debug vizual</span>
+        </label>
+        <div class="ctx-control">
+          <div class="ctx-head">
+            <span>Context crop</span>
+            <span id="ctxValue">1.0</span>
+          </div>
+          <input type="range" id="ctxSlider" min="0.1" max="1" step="0.1" value="1.0" />
+        </div>
+      </section>
+
+      <section class="sb-section" id="progressSection" style="display:none">
+        <div class="progress-header">
+          <span class="sb-label" style="margin-bottom:0">Progres</span>
+          <span id="progressText" class="progress-count">0 / 0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </section>
+
+      <section class="sb-section correction-section">
+        <button id="btnCorrectMode" class="btn btn-correct" disabled>
+          &#9998; Corectie manuala
+        </button>
+        <div id="correctPanel" class="correct-panel" style="display:none">
+          <p class="correct-target">Masina: <span id="correctCarName">&mdash;</span></p>
+          <p class="correct-hint">
+            Click <b>stanga</b> = punct pe masina (verde)<br>
+            Click <b>dreapta</b> = punct in afara (rosu)
+          </p>
+          <div class="correct-pts" id="correctPtsList"></div>
+          <div class="btn-row">
+            <button id="btnApplyCorrect" class="btn btn-primary" disabled>Aplica</button>
+            <button id="btnClearCorrect" class="btn btn-secondary" disabled>Sterge</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="sb-section cars-section">
+        <p class="sb-label">Masini detectate</p>
+        <div id="carList" class="car-list">
+          <p class="list-empty">Selecteaza o imagine</p>
+        </div>
+      </section>
+
+      <div class="sb-status">
+        <span id="statusText" class="status">Asteapta selectie...</span>
+      </div>
+
+    </aside>
+
+    <!-- ── Scene area ── -->
+    <main class="scene-area">
+
+      <div class="scene-placeholder" id="scenePlaceholder">
+        <div class="ph-icon">&#9741;</div>
+        <p class="ph-title">Selecteaza o imagine din lista</p>
+        <p class="ph-sub">Sistemul va incarca imaginea si bounding box-urile aferente,<br>
+          apoi va segmenta fiecare masina individual prin PromptCNN + SAM3.</p>
+      </div>
+
+      <div class="scene-wrapper" id="sceneWrapper" style="display:none">
+        <canvas id="bgCanvas"></canvas>
+        <div class="overlay-layer" id="overlayLayer"></div>
+      </div>
+
+      <!-- Debug panel — visible only when chkDebug is checked -->
+      <div class="debug-panel" id="debugPanel" style="display:none">
+        <div class="debug-title">
+          <span>Debug — <span id="dbgCarName">–</span></span>
+          <button id="dbgClose" class="dbg-close" title="Inchide">&#10005;</button>
+        </div>
+        <div class="debug-imgs">
+          <figure>
+            <img id="dbgCrop" alt="crop" />
+            <figcaption>Crop 512&times;512</figcaption>
+          </figure>
+          <figure>
+            <img id="dbgMask512" alt="mask512" />
+            <figcaption>Masca SAM (512&times;512)</figcaption>
+          </figure>
+          <figure>
+            <img id="dbgBboxMask" alt="bbox mask" />
+            <figcaption>Masca reproiectata (bbox)</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Floating reopen button (when debug panel is closed) -->
+      <button id="dbgReopen" class="dbg-reopen" style="display:none" title="Arata debug">
+        &#9636; Debug
+      </button>
+
+    </main>
+
+  </div>
+
+  <script src="/static/app.js?v=20"></script>
+</body>
+</html>

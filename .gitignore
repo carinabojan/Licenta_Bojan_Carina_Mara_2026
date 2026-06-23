@@ -1,0 +1,24 @@
+# Model antrenat (163MB, peste limita GitHub) — vezi README pentru link de download
+best_model.pth
+*.pth
+
+# Secrete / configurare locala
+.env
+**/.env
+
+# Fisiere Python temporare
+__pycache__/
+*.pyc
+*.pyo
+
+# Iesiri generate de experimente (se pot regenera ruland scripturile)
+PozeInterfata/debug_crops/
+
+# Sistem
+.DS_Store
+Thumbs.db
+
+# Unelte AI / editor
+.claude/
+.vscode/
+.idea/

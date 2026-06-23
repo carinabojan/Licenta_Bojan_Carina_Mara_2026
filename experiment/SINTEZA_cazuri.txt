@@ -1,0 +1,14 @@
+  TABEL DE SINTEZA — cate vehicule segmenteaza mai bine fiecare varianta
+
+  Varianta A = bounding box trimis ca prompt la SAM3 (pe acelasi crop)
+  Varianta B = pipeline propus (PromptCNN + SAM3, pe acelasi crop)
+
+  Experiment         Total   B mai bun    Egal   A mai bun
+  15-30%               173          59      28          86
+  30-45%               173          72      54          47
+  45-60%               173          77      67          29
+
+  B mai bun = vehicule unde pipeline-ul propus (B) obtine IoU mai mare
+  A mai bun = vehicule unde box-ul ca prompt (A) obtine IoU mai mare
+  Egal      = diferenta de IoU sub 0.02
+  (offset = cat de descentrat e bounding box-ul fata de pozitia reala)
