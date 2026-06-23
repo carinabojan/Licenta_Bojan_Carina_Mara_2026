@@ -29,8 +29,9 @@ experiment/                 experimentele comparative (pipeline vs box direct)
    HF_TOKEN=...
    ```
 3. Descarcă modelul antrenat `best_model.pth` și pune-l în rădăcina proiectului.
-   (Modelul nu este inclus în repo deoarece depășește limita GitHub de 100 MB.
-   Link de download: [de completat].)
+   (Modelul nu este inclus în repo deoarece depășește limita GitHub de 100 MB.)
+   Link de download:
+   https://drive.google.com/file/d/1ACoJI0ItzH1UyMQA-9Lxu48CJFUlxCRF/view?usp=drive_link
 
 ## Rulare interfață
 
